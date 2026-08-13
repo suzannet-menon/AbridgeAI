@@ -43,8 +43,76 @@
       AbridgeAI needs JavaScript to run the agent pipeline. Please enable JavaScript and reload the page.
     </div>
   </noscript>
+  <!-- Without JS the landing has no way to hand off to the workspace, so hide it
+       and let the noscript message above speak instead. -->
+  <noscript>
+    <style>
+      .landing { display: none; }
+    </style>
+  </noscript>
   <a class="skip-link" href="#main">Skip to content</a>
-  <div class="app">
+
+  <!-- ============ LANDING SCREEN ============ -->
+  <section class="landing" id="landing" aria-label="AbridgeAI — welcome">
+    <button type="button" class="theme-btn landing-theme-btn" id="landing-theme-btn" title="Toggle light / dark theme">Dark mode</button>
+
+    <div class="landing-inner">
+      <div class="landing-brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">AbridgeAI</span>
+      </div>
+
+      <h1 class="landing-title">
+        From rough idea to<br />
+        <span class="landing-accent">AO-ready task prompt.</span>
+      </h1>
+
+      <p class="landing-sub">
+        A deterministic five-agent pipeline — GitHub, Research, Architecture, Tech Stack,
+        AO Task — turns your idea into a copyable task prompt. It runs entirely in your
+        browser: no backend, no build step, no AI API calls.
+      </p>
+
+      <div class="landing-demo">
+        <ol class="landing-steps" id="landing-steps" aria-label="Pipeline preview">
+          <li class="lstep" data-preview="github">
+            <span class="lstep-dot" aria-hidden="true"></span>
+            <span class="lstep-name">GitHub Agent</span>
+            <span class="lstep-status">ready</span>
+          </li>
+          <li class="lstep" data-preview="research">
+            <span class="lstep-dot" aria-hidden="true"></span>
+            <span class="lstep-name">Research Agent</span>
+            <span class="lstep-status">ready</span>
+          </li>
+          <li class="lstep" data-preview="architecture">
+            <span class="lstep-dot" aria-hidden="true"></span>
+            <span class="lstep-name">Architecture Agent</span>
+            <span class="lstep-status">ready</span>
+          </li>
+          <li class="lstep" data-preview="stack">
+            <span class="lstep-dot" aria-hidden="true"></span>
+            <span class="lstep-name">Tech Stack Agent</span>
+            <span class="lstep-status">ready</span>
+          </li>
+          <li class="lstep" data-preview="task">
+            <span class="lstep-dot" aria-hidden="true"></span>
+            <span class="lstep-name">AO Task Agent</span>
+            <span class="lstep-status">ready</span>
+          </li>
+        </ol>
+        <button type="button" class="btn btn--ghost" id="landing-preview">Preview the pipeline</button>
+      </div>
+
+      <div class="landing-cta">
+        <button type="button" class="btn btn--primary btn--lg" id="landing-enter">Enter the workspace →</button>
+      </div>
+
+      <p class="landing-foot">Free · Runs locally · Your data never leaves the browser</p>
+    </div>
+  </section>
+
+  <div class="app" id="app">
 
     <!-- ============ LEFT: PROJECT HISTORY ============ -->
     <aside class="rail rail--left" aria-label="Project history">

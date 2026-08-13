@@ -31,6 +31,14 @@
   var themeBtn = $("#theme-btn");
   var exportBtn = $("#export-btn");
 
+  // Landing screen (first screen; hands off to the workspace).
+  var landingEl = $("#landing");
+  var appEl = $("#app");
+  var landingEnter = $("#landing-enter");
+  var landingPreview = $("#landing-preview");
+  var landingSteps = $("#landing-steps");
+  var landingThemeBtn = $("#landing-theme-btn");
+
   var STEP_ORDER = ["github", "research", "architecture", "stack", "task"];
 
   var HISTORY_KEY = "abridgeai.history.v1";
@@ -120,16 +128,22 @@
     document.documentElement.setAttribute("data-theme", mode);
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.content = mode === "dark" ? "#151310" : "#b6e62c";
-    themeBtn.textContent = mode === "dark" ? "Light mode" : "Dark mode";
+    [themeBtn, landingThemeBtn].forEach(function (btn) {
+      if (btn) btn.textContent = mode === "dark" ? "Light mode" : "Dark mode";
+    });
+  }
+
+  function toggleTheme() {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* ignore */ }
+    applyTheme(next);
+    toast(next === "dark" ? "Dark theme on." : "Light theme on.");
   }
 
   function initTheme() {
     applyTheme(storedTheme() || systemTheme());
-    themeBtn.addEventListener("click", function () {
-      var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* ignore */ }
-      applyTheme(next);
-      toast(next === "dark" ? "Dark theme on." : "Light theme on.");
+    [themeBtn, landingThemeBtn].forEach(function (btn) {
+      if (btn) btn.addEventListener("click", toggleTheme);
     });
     if (window.matchMedia) {
       var mql = window.matchMedia("(prefers-color-scheme: dark)");
@@ -980,10 +994,79 @@
   });
 
   // ------------------------------------------------------------------------
+  // Landing screen — one-section welcome that hands off to the workspace
+  // ------------------------------------------------------------------------
+  var LANDING_STEPS = ["github", "research", "architecture", "stack", "task"];
+  var motionOk = !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+  function setLandingStep(step, state) {
+    var li = landingSteps && landingSteps.querySelector('[data-preview="' + step + '"]');
+    if (!li) return;
+    li.classList.remove("is-running", "is-done");
+    if (state === "running") li.classList.add("is-running");
+    if (state === "done") li.classList.add("is-done");
+    var status = li.querySelector(".lstep-status");
+    status.textContent = state === "running"
+      ? "running…"
+      : state === "done"
+        ? (step === "task" ? "prompt ready" : "done")
+        : "ready";
+  }
+
+  // Mini demo: walk through the five agents exactly like the real pipeline.
+  function previewPipeline() {
+    if (!landingPreview || landingPreview.disabled) return;
+    landingPreview.disabled = true;
+    LANDING_STEPS.forEach(function (s) { setLandingStep(s, "ready"); });
+    var unit = motionOk ? 480 : 150;
+    var t = 0;
+    LANDING_STEPS.forEach(function (step, i) {
+      t += unit;
+      setTimeout(function () { setLandingStep(step, "running"); }, t);
+      t += Math.round(unit * 1.4);
+      setTimeout(function () {
+        setLandingStep(step, "done");
+        if (i === LANDING_STEPS.length - 1) {
+          landingPreview.disabled = false;
+          landingPreview.textContent = "Replay the pipeline";
+        }
+      }, t);
+    });
+  }
+
+  // Hand off: fade the landing out, reveal + focus the workspace.
+  function enterWorkspace() {
+    if (!landingEl || landingEl.hidden) return;
+    landingEl.classList.add("is-leaving");
+    var done = false;
+    var finish = function () {
+      if (done) return;
+      done = true;
+      landingEl.hidden = true;
+      if (appEl) appEl.inert = false;
+      window.scrollTo(0, 0);
+      var nameField = $("#f-name");
+      if (nameField) nameField.focus();
+      toast("Welcome to the workspace — fill the form and run the pipeline.");
+    };
+    // transitionend covers the fade; the timeout is a safety net (incl. reduced motion).
+    landingEl.addEventListener("transitionend", function (e) {
+      if (e.target === landingEl) finish();
+    });
+    setTimeout(finish, motionOk ? 450 : 0);
+  }
+
+  if (landingEnter) landingEnter.addEventListener("click", enterWorkspace);
+  if (landingPreview) landingPreview.addEventListener("click", previewPipeline);
+
+  // ------------------------------------------------------------------------
   // Boot
   // ------------------------------------------------------------------------
   initTheme();
   restoreDraft();
   renderHistory();
   updateExportBtn();
+  // The landing is the first screen; keep the workspace out of tab order until
+  // "Enter the workspace" is clicked.
+  if (landingEl && appEl) appEl.inert = true;
 })();

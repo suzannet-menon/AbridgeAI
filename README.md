@@ -6,6 +6,8 @@ the same inputs always produce the same outputs.
 
 ## Features
 
+- **Landing screen** — a one-section welcome that previews the five-agent pipeline
+  interactively and hands off to the full workspace with one click.
 - **Five-agent pipeline** — GitHub → Research → Architecture → Tech Stack → AO Task, run
   in order and visualized live in the right-hand rail.
 - **Deterministic by design** — inputs are hashed (djb2) and used to pick from fixed
@@ -58,7 +60,7 @@ python -m http.server 8000
 
 | Path | Purpose |
 | --- | --- |
-| `index.html` | Workspace shell (history / form / pipeline). |
+| `index.html` | Landing screen + workspace shell (history / form / pipeline). |
 | `styles.css` | Design system (light & dark themes). |
 | `script.js` | GitHub parser, deterministic agents, pipeline runner, history, export, theme, copy. |
 | `favicon.svg` | Site favicon (matches the brand mark). |
@@ -81,6 +83,9 @@ abridgeai/
 
 ## Layout
 
+- **Landing screen** — opens first: brand, pitch, an interactive pipeline preview
+  (walk through all five agents), and the **Enter the workspace** button that reveals
+  the workspace and focuses the form.
 - **Left rail** — project history (populates after runs; click to re-open a saved brief,
   delete individual entries, or clear all).
 - **Center** — form + generated outputs, with a **Export brief (.md)** action and a
