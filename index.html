@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AbridgeAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Permanent+Marker&family=Roboto+Slab:wght@700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="panel panel-left">
+      <div class="brand-lockup">
+        <div class="brand-mark">//</div>
+        <div class="brand-name">AbridgeAI</div>
+      </div>
+      <div class="sidebar-section">
+        <div class="eyebrow">Project History</div>
+        <button id="newProjectBtn" class="ghost-button full-width">+ New Project</button>
+      </div>
+      <div id="historyEmpty" class="empty-state large-empty">
+        <div class="empty-icon">o</div>
+        <h3>No projects yet.</h3>
+        <p>Start by describing your idea.</p>
+        <span>Your project history will appear here.</span>
+      </div>
+      <div id="historyList" class="history-list hidden"></div>
+      <div class="sidebar-card">
+        <p><span class="accent">*</span> AbridgeAI turns your idea into a shipped reality.</p>
+        <button class="dark-button">Learn how it works -&gt;</button>
+      </div>
+      <div class="version">AbridgeAI v0.1.0</div>
+    </aside>
+
+    <main class="panel panel-main">
+      <header class="topbar">
+        <button class="workspace-pill"><span class="live-dot"></span> Workspace: Personal v</button>
+        <div class="topbar-actions">
+          <button class="icon-button">Docs</button>
+          <button class="icon-button mono">Cmd K</button>
+          <button class="avatar">R</button>
+        </div>
+      </header>
+
+      <section id="heroView" class="hero-view">
+        <div class="hero-grid"></div>
+        <div class="plus-mark">+</div>
+        <div class="hero-copy">
+          <h1><span class="slab">IDEAS</span> <span class="marker">ARE</span> <span class="accent-block">EASY.</span></h1>
+          <h2><span class="serif">Shipping</span> <span class="marker underline">IS HARD.</span></h2>
+          <p>AbridgeAI takes your idea, plans the smartest path, and gets you to the <span class="accent-text">first pull request.</span></p>
+        </div>
+        <div class="input-frame">
+          <div class="prompt-line"><span class="caret">&gt;</span> Describe your project idea...</div>
+          <textarea id="ideaInput" placeholder="Build a study planner that turns course syllabi into weekly task lists..."></textarea>
+          <div class="input-actions">
+            <button class="attach-button" aria-label="Attach context">[+]</button>
+            <span class="hint">Shift + Enter to send</span>
+            <button id="submitIdea" class="submit-button" aria-label="Submit idea">-&gt;</button>
+          </div>
+        </div>
+        <div class="how-it-works">
+          <div class="eyebrow">How it works</div>
+          <div class="steps-row">
+            <div class="step"><span>01</span><strong>Share your idea</strong></div>
+            <div class="arrow">-&gt;</div>
+            <div class="step"><span>02</span><strong>Agents analyze it</strong></div>
+            <div class="arrow">-&gt;</div>
+            <div class="step"><span>03</span><strong>We craft a smart plan</strong></div>
+            <div class="arrow">-&gt;</div>
+            <div class="step"><span>04</span><strong>AO builds first chunk</strong></div>
+            <div class="arrow">-&gt;</div>
+            <div class="step"><span>05</span><strong>You review the PR</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="dashboardView" class="dashboard-view hidden">
+        <div class="section-header">
+          <div>
+            <div class="eyebrow">Active project</div>
+            <h2><span class="slab small">PLAN</span> <span class="marker small">READY</span></h2>
+          </div>
+          <div class="header-meta mono">IDEA -&gt; PLAN -&gt; TASK -&gt; AO -&gt; PR</div>
+        </div>
+
+        <section class="summary-strip bordered-block">
+          <div>
+            <div class="eyebrow">Project Summary</div>
+            <h3 id="projectTitle">Campus Study Planner</h3>
+            <p id="projectSummary">A focused build plan for a student tool that converts syllabus dates into a weekly action system.</p>
+          </div>
+          <div class="meta-grid mono">
+            <div><span>GitHub</span><strong>@student-builder</strong></div>
+            <div><span>Deadline</span><strong>4 weeks</strong></div>
+            <div><span>Comfort</span><strong>Intermediate</strong></div>
+            <div><span>Stack</span><strong>Next.js + Supabase</strong></div>
+          </div>
+        </section>
+
+        <section class="metrics-row bordered-block">
+          <article><span class="eyebrow">GitHub Signals</span><strong>12 repos</strong><p>JS-heavy profile, steady commits, solid README habits.</p></article>
+          <article><span class="eyebrow">Recommended Stack</span><strong>Next.js · TypeScript</strong><p>Fast student-friendly UI with easy auth and deploy path.</p></article>
+          <article><span class="eyebrow">Innovation</span><strong>Office hours mode</strong><p>Turn looming deadlines into urgency-ranked weekly sprints.</p></article>
+        </section>
+
+        <section class="content-grid">
+          <article class="bordered-block text-block">
+            <div class="eyebrow">Research / Problem Understanding</div>
+            <p>Students usually know what is due, but not what matters next. The product should reduce planning friction, surface urgency, and make progress visible in one glance.</p>
+          </article>
+          <article class="bordered-block list-block">
+            <div class="eyebrow">Target Users</div>
+            <ul><li>College students juggling 4-6 courses</li><li>Students who procrastinate until deadlines stack up</li><li>Project-oriented learners who want a visual weekly plan</li></ul>
+          </article>
+          <article class="bordered-block list-block">
+            <div class="eyebrow">Constraints</div>
+            <ul><li>Must work on mobile and laptop</li><li>Need quick onboarding</li><li>Should support incomplete syllabus inputs</li></ul>
+          </article>
+          <article class="bordered-block tag-block">
+            <div class="eyebrow">Known Skills / Learning Gaps</div>
+            <div class="tag-row"><span class="tag">HTML/CSS</span><span class="tag">React basics</span><span class="tag">TypeScript</span><span class="tag mute">DB schema design</span><span class="tag mute">Scheduling logic</span></div>
+            <ol class="learning-path"><li>Model courses and deadlines</li><li>Build parsing flow for uploaded syllabus</li><li>Create urgency scoring for tasks</li></ol>
+          </article>
+        </section>
+
+        <section class="architecture-roadmap">
+          <article class="bordered-block architecture-block">
+            <div class="eyebrow">Architecture</div>
+            <div class="diagram">
+              <div class="node">Student Input</div>
+              <div class="node">Signal Analysis</div>
+              <div class="node">Planning Agents</div>
+              <div class="node accent-node">AO Prompt</div>
+              <div class="node">Codex Worker</div>
+              <div class="node">Pull Request</div>
+            </div>
+          </article>
+          <article class="bordered-block roadmap-block">
+            <div class="eyebrow">Roadmap</div>
+            <div class="timeline">
+              <div class="time-item"><span>01</span><div><strong>Foundation</strong><p>Set up project, entities, and syllabus ingestion.</p></div></div>
+              <div class="time-item active"><span>02</span><div><strong>Weekly Planner</strong><p>Generate urgency-ranked weekly task views.</p></div></div>
+              <div class="time-item"><span>03</span><div><strong>Review Loop</strong><p>Add progress tracking and notifications.</p></div></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="handoff-area">
+          <article class="warning-block">
+            <div class="eyebrow">Risks</div>
+            <p>Syllabus parsing quality may vary. Start with manual entry fallback and validate calendar edge cases before broadening scope.</p>
+          </article>
+          <article class="bordered-block handoff-panel">
+            <div class="handoff-head">
+              <div>
+                <div class="eyebrow">AO Handoff</div>
+                <h3><span class="slab small">ONE TASK</span> <span class="marker small">ONLY</span></h3>
+              </div>
+              <div id="handoffStatus" class="status-pill">Ready</div>
+            </div>
+            <div class="execution-strip mono">PLAN READY -&gt; TASK SCOPED -&gt; READY FOR AO -&gt; CODEX WORKER -&gt; PULL REQUEST</div>
+            <div class="task-spec mono">
+TASK: Implement the weekly planner board.
+FILES: components/WeeklyPlanner.tsx, lib/urgency.ts
+SCOPE:
+- render weekly grouped tasks
+- show urgency badges
+- support manual deadline input
+DO NOT:
+- add auth
+- change routing
+- modify unrelated files
+VALIDATE:
+- lint passes
+- mock data renders
+- PR is focused
+            </div>
+            <div class="handoff-actions">
+              <button id="copyPrompt" class="ghost-button">Copy AO Prompt</button>
+              <button id="sendAo" class="submit-button alt">Send to AO</button>
+            </div>
+            <div class="pr-row">
+              <input id="prUrl" type="url" placeholder="Paste PR URL (optional)" />
+              <button id="savePr" class="ghost-button">Save PR</button>
+            </div>
+            <div id="prStatus" class="mono pr-status">PR Status: Waiting for branch</div>
+          </article>
+        </section>
+      </section>
+
+      <footer class="footer-comment mono">// Code is built line by line. Projects are built decision by decision.</footer>
+    </main>
+
+    <aside class="panel panel-right">
+      <div class="pipeline-head">
+        <div class="eyebrow">Agent Pipeline</div>
+        <div class="live-label"><span class="live-dot"></span> Live</div>
+      </div>
+      <div id="pipeline" class="pipeline"></div>
+    </aside>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
