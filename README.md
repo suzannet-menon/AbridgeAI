@@ -1,11 +1,11 @@
 # AbridgeAI — Agent Workspace
-*Built for the Agent Orchestrator, Orchestra Hackathon.*
+
+*Built for the Agent Orchestrator (Orchestra Hackathon).*
 
 A static, client-side workspace that turns a project idea into a **feasibility plan, a
 starter scaffold, and an AO-ready task prompt**. No build step, no backend, no external
 AI calls: every agent output is **deterministic** — the same inputs always produce the
 same outputs.
-
 
 ## Features
 
@@ -19,7 +19,7 @@ same outputs.
 - **Builder capability** — the Builder Agent generates a starter scaffold for the chosen
   stack (file tree, starter files, milestone checklist with acceptance criteria) and a
   **Download scaffold (.zip)** button produces a real, unzippable starter project that
-  includes a `PLAN.md` build plan.
+  includes a `PLAN.md` build plan plus `AO_TASK.md` and `ACCEPTANCE_CRITERIA.md` handoff docs.
 - **Live GitHub data with graceful fallback** — fetches the public GitHub profile + repos
   via the public GitHub API (client-side). Falls back to bundled sample data
   (`data/sample-github-analysis.json`) when the API is unreachable, rate-limited, CORS-blocked,
@@ -41,15 +41,17 @@ same outputs.
 - **Works everywhere** — plain HTML/CSS/JS. Open the file directly or serve the folder;
   no dependencies, no install.
 
-## ![AbridgeAI-dashboard form](Abridge-kanman-board.png)
+## Screenshots
 
-## ![AbridgeAI-Kanman Board](AbridgeAi-dashboard.png)
+![AbridgeAI dashboard form](Abridge-kanman-board.png)
+
+![AbridgeAI kanban board](AbridgeAi-dashboard.png)
 
 ## How it works
 
-Fill in the form (name, preferred stack, GitHub username, project idea, deadline, comfort
-level, project type, team size, audience) and run the pipeline — with the **Run pipeline**
-button or **Ctrl+Enter**:
+Fill in the form (name, preferred stack, optional custom stack, GitHub username, project
+idea, deadline, comfort level, project type, team size, audience) and run the pipeline —
+with the **Run pipeline** button or **Ctrl+Enter**:
 
 1. **GitHub Agent** — pulls the public GitHub profile + top repos and languages.
 2. **Research Agent** — deterministic opportunity / risk / direction scan.
@@ -72,9 +74,16 @@ Static files only — open `index.html` in any browser, or serve the folder:
 # any static server works, e.g.
 python -m http.server 8000
 # then open http://localhost:8000
-
-#If you changed JavaScript, first confirm the file parses: node --check script.js
 ```
+
+If you changed `script.js`, confirm it still parses before opening the page:
+`node --check script.js`.
+
+## Submission links
+
+- **Output repo** — where AO raised a PR for the problem statement:
+  <https://github.com/ruchirajags/AO-DUMMY.git>
+- **Demo video** — <https://youtu.be/AJ6Sbk-3UQU>
 
 ## Project structure
 
@@ -84,8 +93,9 @@ python -m http.server 8000
 | `styles.css` | Design system (light & dark themes). |
 | `script.js` | GitHub parser, deterministic agents, pipeline runner, history, export, theme, copy. |
 | `favicon.svg` | Site favicon (matches the brand mark). |
+| `AbridgeAi-dashboard.png` | Dashboard screenshot for the README. |
+| `Abridge-kanman-board.png` | Kanban board screenshot for the README. |
 | `data/sample-github-analysis.json` | Fallback GitHub profile + repos when the API is unavailable. |
-| `CONTRIBUTING.md` | Guidelines for contributing. |
 | `LICENSE` | Apache-2.0 license. |
 
 ```
@@ -94,24 +104,19 @@ abridgeai/
 ├── styles.css
 ├── script.js
 ├── favicon.svg
+├── AbridgeAi-dashboard.png
+├── Abridge-kanman-board.png
 ├── data/
 │   └── sample-github-analysis.json
-├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md
 ```
-
-### Output Repo(where AO raised a PR for the problem statement): 
-https://github.com/ruchirajags/AO-DUMMY.git
-
-### Demo Video: 
-https://youtu.be/AJ6Sbk-3UQU
 
 ## Layout
 
 - **Left rail** — project history (populates after runs; click to re-open a saved brief,
   delete individual entries, or clear all).
-- **Center** — form + generated outputs, with a **Export brief (.md)** action and a
+- **Center** — form + generated outputs, with an **Export brief (.md)** action and a
   light/dark theme toggle in the top bar.
 - **Right rail** — live agent pipeline (status per agent, GitHub → Research → Feasibility →
   Architecture → Tech Stack → Builder → AO Task).
@@ -131,8 +136,10 @@ Dark theme switches the palette while keeping the same identity.
   clearing browser data for the site resets it.
 
 ## Team Members
+
 - [Suzanne Daniel Thomas](https://github.com/suzannet-menon)
 - [Ruchira Rajesh Jagshettiwar](https://github.com/ruchirajags)
 
 ## License
+
 Licensed under the [Apache License, Version 2.0](LICENSE).

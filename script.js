@@ -404,7 +404,7 @@
     }
   };
 
-    function stackParts(input) {
+  function stackParts(input) {
     return String(input.stackCustom || "")
       .split(",")
       .map(function (part) { return part.trim(); })
@@ -753,6 +753,12 @@
     lines.push(commands.install);
     lines.push("```");
     lines.push("");
+    lines.push("## Build / lint");
+    lines.push("");
+    lines.push("```bash");
+    lines.push(commands.build);
+    lines.push("```");
+    lines.push("");
     lines.push("## Run");
     lines.push("");
     lines.push("```bash");
@@ -763,12 +769,6 @@
     lines.push("");
     lines.push("```bash");
     lines.push(commands.test);
-    lines.push("```");
-    lines.push("");
-    lines.push("## Build / lint");
-    lines.push("");
-    lines.push("```bash");
-    lines.push(commands.build);
     lines.push("```");
     lines.push("");
     lines.push("## First AO task");
@@ -829,7 +829,7 @@
     return lines.join("\n");
   }
 
- function scaffoldFiles(input, slug) {
+  function scaffoldFiles(input, slug) {
     var stackKey = input.stack || "unsure";
     var name = input.name || slug;
     var desc = input.idea || "A deterministic tool.";
@@ -913,8 +913,7 @@
         "  });\n" +
         "});\n" },
       { path: ".gitignore", content: "node_modules/\ndist/\n*.log\n" },
-      { path: "README.md", content:
-        "# " + name + "\n\n" + desc + "\n\n## Run\n\nnpm install\nnpm run build\nnode dist/index.js \"hello\"\n" }
+      { path: "README.md", content: scaffoldReadme(input, slug, name, desc, "typescript") }
     ];
   }
 
@@ -935,7 +934,10 @@
         "addopts = \"-q\"\n" +
         "\n" +
         "[tool.ruff]\n" +
-        "line-length = 100\n" },
+        "line-length = 100\n" +
+        "\n" +
+        "[dependency-groups]\n" +
+        "dev = [\"pytest>=8.0\", \"ruff>=0.6\"]\n" },
       { path: "src/__init__.py", content: "" },
       { path: "src/main.py", content:
         '"""Entry point — Typer CLI over the deterministic core."""\n' +
@@ -967,7 +969,7 @@
         "def test_empty():\n" +
         '    assert run("") == "received: "\n' },
       { path: ".gitignore", content: "__pycache__/\n.venv/\n*.pyc\n" },
-       { path: "README.md", content: scaffoldReadme(input, slug, name, desc, "python") }
+      { path: "README.md", content: scaffoldReadme(input, slug, name, desc, "python") }
     ];
   }
 
