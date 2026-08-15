@@ -16,3 +16,9 @@ Desktop.ini
 # --- Dependency / build dirs (future-proofing; the site has no build step) ---
 node_modules/
 dist/
+
+# --- Local tooling ---
+.opencode/
+.cache/
+.tmp/
+
