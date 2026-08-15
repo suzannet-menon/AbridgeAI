@@ -1,11 +1,12 @@
 # AbridgeAI — Agent Workspace
 *Built for the Agent Orchestrator, Orchestra Hackathon.*
 
+[![CI](https://github.com/suzannet-menon/AbridgeAI/actions/workflows/ci.yml/badge.svg)](https://github.com/suzannet-menon/AbridgeAI/actions/workflows/ci.yml)
+
 A static, client-side workspace that turns a project idea into a **feasibility plan, a
 starter scaffold, and an AO-ready task prompt**. No build step, no backend, no external
 AI calls: every agent output is **deterministic** — the same inputs always produce the
 same outputs.
-
 
 ## Features
 
@@ -41,9 +42,11 @@ same outputs.
 - **Works everywhere** — plain HTML/CSS/JS. Open the file directly or serve the folder;
   no dependencies, no install.
 
-## ![AbridgeAI-dashboard form](Abridge-kanman-board.png)
+## Screenshots
 
-## ![AbridgeAI-Kanman Board](AbridgeAi-dashboard.png)
+![AbridgeAI dashboard form](Abridge-kanman-board.png)
+
+![AbridgeAI kanban board](AbridgeAi-dashboard.png)
 
 ## How it works
 
@@ -73,7 +76,7 @@ Static files only — open `index.html` in any browser, or serve the folder:
 python -m http.server 8000
 # then open http://localhost:8000
 
-#If you changed JavaScript, first confirm the file parses: node --check script.js
+# If you changed JavaScript, first confirm the file parses: node --check script.js
 ```
 
 ## Project structure
@@ -85,7 +88,10 @@ python -m http.server 8000
 | `script.js` | GitHub parser, deterministic agents, pipeline runner, history, export, theme, copy. |
 | `favicon.svg` | Site favicon (matches the brand mark). |
 | `data/sample-github-analysis.json` | Fallback GitHub profile + repos when the API is unavailable. |
+| `AbridgeAi-dashboard.png`, `Abridge-kanman-board.png` | Screenshots shown above. |
+| `.github/workflows/ci.yml` | CI: JS syntax, JSON validity, asset checks. |
 | `CONTRIBUTING.md` | Guidelines for contributing. |
+| `.gitattributes`, `.gitignore` | Repository hygiene (line endings, ignored files). |
 | `LICENSE` | Apache-2.0 license. |
 
 ```
@@ -96,22 +102,29 @@ abridgeai/
 ├── favicon.svg
 ├── data/
 │   └── sample-github-analysis.json
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── .gitattributes
+├── .gitignore
+├── AbridgeAi-dashboard.png
+├── Abridge-kanman-board.png
 ├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md
 ```
 
-### Output Repo(where AO raised a PR for the problem statement): 
+### Output repo (where AO raised a PR for the problem statement):
 https://github.com/ruchirajags/AO-DUMMY.git
 
-### Demo Video: 
+### Demo video:
 https://youtu.be/AJ6Sbk-3UQU
 
 ## Layout
 
 - **Left rail** — project history (populates after runs; click to re-open a saved brief,
   delete individual entries, or clear all).
-- **Center** — form + generated outputs, with a **Export brief (.md)** action and a
+- **Center** — form + generated outputs, with an **Export brief (.md)** action and a
   light/dark theme toggle in the top bar.
 - **Right rail** — live agent pipeline (status per agent, GitHub → Research → Feasibility →
   Architecture → Tech Stack → Builder → AO Task).
@@ -129,6 +142,9 @@ Dark theme switches the palette while keeping the same identity.
   the same inputs always produce byte-identical starter files.
 - Everything persists in `localStorage` under `abridgeai.*` keys (history, draft, theme);
   clearing browser data for the site resets it.
+- CI (`.github/workflows/ci.yml`) runs on every push and pull request: `node --check`
+  on `script.js`, JSON validation of the sample data, and a check that all referenced
+  assets exist.
 
 ## Team Members
 - [Suzanne Daniel Thomas](https://github.com/suzannet-menon)

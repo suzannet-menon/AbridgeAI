@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    name: Static checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate script.js syntax
+        run: node --check script.js
+
+      - name: Validate bundled sample data
+        run: node -e "JSON.parse(require('fs').readFileSync('data/sample-github-analysis.json', 'utf8'))"
+
+      - name: Verify referenced assets exist
+        run: |
+          node -e "
+            const fs = require('fs');
+            const missing = [
+              'favicon.svg',
+              'data/sample-github-analysis.json',
+              'Abridge-kanman-board.png',
+              'AbridgeAi-dashboard.png',
+              'styles.css',
+              'script.js',
+              'index.html',
+            ].filter((f) => !fs.existsSync(f));
+            if (missing.length) {
+              console.error('Missing referenced files: ' + missing.join(', '));
+              process.exit(1);
+            }
+            console.log('All referenced assets present.');
+          "
