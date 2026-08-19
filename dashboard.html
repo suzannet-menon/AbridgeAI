@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AbridgeAI — Project Workspace</title>
+  <meta name="description"
+    content="Turn a project idea into a feasibility plan, a starter scaffold, and a copyable AO-ready task prompt. A deterministic seven-agent pipeline runs entirely in your browser — no backend, no build step." />
+  <meta name="theme-color" content="#b6e62c" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="AbridgeAI" />
+  <meta property="og:title" content="AbridgeAI — Project Workspace" />
+  <meta property="og:description"
+    content="Turn a project idea into a feasibility plan, a starter scaffold, and a copyable AO-ready task prompt with a deterministic seven-agent pipeline — entirely in your browser." />
+  <meta name="twitter:card" content="summary" />
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+
+  <script>
+    (function () {
+      var key = "abridgeai.theme.v1";
+      var stored = null;
+      try { stored = localStorage.getItem(key); } catch (e) { /* ignore */ }
+      var dark = stored
+        ? stored === "dark"
+        : !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.content = dark ? "#151310" : "#b6e62c";
+    })();
+  </script>
+</head>
+
+<body>
+  <noscript>
+    <div class="noscript" role="alert">
+      AbridgeAI needs JavaScript to run the agent pipeline. Please enable JavaScript and reload the page.
+    </div>
+  </noscript>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="shell">
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="side" aria-label="Primary">
+      <div class="side-brand">
+        <img src="logo.png" alt="AbridgeAI" class="navbar-logo" />
+      </div>
+
+      <nav class="side-nav" aria-label="Sections">
+        <button type="button" class="side-link is-active" data-view="overview">
+          <svg class="side-link-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="3" y="3" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.6" />
+            <rect x="11" y="3" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.6" />
+            <rect x="3" y="11" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.6" />
+            <rect x="11" y="11" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+          Overview
+        </button>
+      </nav>
+
+      <div class="side-history-section">
+        <div class="side-history-header">
+          <span class="side-history-title">Projects</span>
+          <button type="button" class="rail-action" id="history-clear" hidden>Clear all</button>
+        </div>
+        <div class="history-empty" id="history-empty">No projects yet.</div>
+        <ol class="history-list-flat" id="history-list"></ol>
+      </div>
+
+      <div class="side-spacer"></div>
+    </aside>
+
+    <!-- ============ WORKSPACE ============ -->
+    <div class="workspace">
+      <header class="top-nav">
+        <div class="top-nav-brand">
+          <span class="workspace-label">AbridgeAI Dashboard</span>
+        </div>
+        <div class="top-nav-actions">
+          <button type="button" class="btn-new" id="new-project-btn">+ New project</button>
+          <button type="button" class="theme-btn" id="theme-btn" aria-label="Toggle theme">
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="main" id="main">
+
+        <!-- ===== OVERVIEW VIEW ===== -->
+        <section class="view" id="view-overview" data-view-panel="overview">
+          <div class="view-head">
+            <div>
+              <h1>Overview</h1>
+              <p class="view-sub">Run the seven-agent pipeline on an idea to get a feasibility read, an architecture and
+                stack direction, a starter scaffold, and a copyable task prompt.</p>
+            </div>
+          </div>
+
+          <div class="metrics-row">
+            <div class="metric">
+              <span class="metric-label">Projects</span>
+              <span class="metric-value" id="m-projects">0</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Feasibility avg</span>
+              <span class="metric-value" id="m-feas">—</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Scaffolds</span>
+              <span class="metric-value" id="m-scaffolds">0</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Tasks ready</span>
+              <span class="metric-value" id="m-tasks">0</span>
+            </div>
+          </div>
+
+          <div class="overview-grid">
+            <section class="ov-section ov-pipeline">
+              <h2>Agent pipeline <span id="pipeline-state"
+                  style="font-weight:500;color:var(--ink-faint);text-transform:none;letter-spacing:0;">· standby</span>
+              </h2>
+              <ol class="timeline" id="pipeline">
+                <li class="tl-row" data-step="github">
+                  <span class="tl-node"><svg viewBox="0 0 12 12" aria-hidden="true">
+                      <path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg><svg class="tl-pulse-ring" viewBox="0 0 16 16" width="8" height="8" style="position:absolute;"
+                      aria-hidden="true">
+                      <circle cx="8" cy="8" r="4" fill="none" stroke="var(--lime)" stroke-width="2" />
+                    </svg></span>
+                  <span class="tl-name">GitHub Agent</span>
+                  <span class="tl-status">queued</span>
+                </li>
+                <li class="tl-row" data-step="research">
+                  <span class="tl-node"><svg viewBox="0 0 12 12" aria-hidden="true">
+                      <path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>
+                  <span class="tl-name">Research Agent</span>
+                  <span class="tl-status">queued</span>
+                </li>
+                <li class="tl-row" data-step="feasibility">
+                  <span class="tl-node"><svg viewBox="0 0 12 12" aria-hidden="true">
+                      <path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>
+                  <span class="tl-name">Feasibility Agent</span>
+                  <span class="tl-status">queued</span>
+                </li>
+                <li class="tl-row" data-step="architecture">
+                  <span class="tl-node"><svg viewBox="0 0 12 12" aria-hidden="true">
+                      <path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>
+                  <span class="tl-name">Architecture Agent</span>
+                  <span class="tl-status">queued</span>
+                </li>
+                <li class="tl-row" data-step="stack">
+                  <span class="tl-node"><svg viewBox="0 0 12 12" aria-hidden="true">
+                      <path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>
+                  <span class="tl-name">Tech Stack Agent</span>
+                  <span class="tl-status">queued</span>
+                </li>
+                <li class="tl-row" data-step="builder">
+                  <span class="tl-node"><svg viewBox="0 0 12 12" aria-hidden="true">
+                      <path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>
+                  <span class="tl-name">Builder Agent</span>
+                  <span class="tl-status">queued</span>
+                </li>
+                <li class="tl-row" data-step="task">
+                  <span class="tl-node"><svg viewBox="0 0 12 12" aria-hidden="true">
+                      <path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>
+                  <span class="tl-name">AO Task Agent</span>
+                  <span class="tl-status">queued</span>
+                </li>
+              </ol>
+            </section>
+
+            <section class="ov-section ov-feasibility">
+              <h2>Feasibility</h2>
+              <p class="feas-empty" id="feas-empty">Run the pipeline to see a feasibility read here.</p>
+              <div id="feas-live" hidden>
+                <div class="feas-arc-wrap">
+                  <svg class="feas-arc" width="76" height="76" viewBox="0 0 76 76">
+                    <circle class="feas-arc-track" cx="38" cy="38" r="32" />
+                    <circle class="feas-arc-fill" id="feas-arc-fill" cx="38" cy="38" r="32"
+                      transform="rotate(-90 38 38)" />
+                    <text class="feas-arc-num" id="feas-arc-num" x="38" y="35">0</text>
+                    <text class="feas-arc-max" id="feas-arc-max" x="38" y="50">/100</text>
+                  </svg>
+                  <div>
+                    <p class="feas-verdict-line" id="feas-verdict-line"></p>
+                  </div>
+                </div>
+                <div class="feas-axes" id="feas-axes"></div>
+              </div>
+            </section>
+
+            <section class="ov-section ov-next">
+              <h2>Next output</h2>
+              <p class="next-output-text" id="next-output-text">Add an idea and run the pipeline to get started.</p>
+            </section>
+          </div>
+
+          <p class="status-line" id="status" data-state="idle" aria-live="polite">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="status-text">idle</span>
+          </p>
+
+          <section class="outputs-section" id="outputs-panel" hidden>
+            <div class="outputs-head">
+              <h2>Generated outputs</h2>
+              <button type="button" class="btn btn--ghost btn--sm" id="export-btn" hidden>Export brief (.md)</button>
+            </div>
+            <div class="outputs" id="outputs"></div>
+          </section>
+        </section>
+
+        <!-- ===== NEW PROJECT VIEW ===== -->
+        <section class="view" id="view-new" data-view-panel="new" hidden>
+          <button type="button" class="back-link" id="back-btn">← Back to Overview</button>
+          <h1>New project</h1>
+          <p class="view-sub">Tell AbridgeAI about your idea. It'll run seven deterministic agents and prepare a
+            feasibility read, an architecture and stack direction, a starter scaffold, and a copyable task prompt.</p>
+
+          <form id="project-form" class="proj-form">
+            <div class="form-grid">
+              <div class="form-main-col">
+                <div class="field">
+                  <label for="f-name">Project name</label>
+                  <input id="f-name" name="name" type="text" placeholder="Ada" autocomplete="off" />
+                </div>
+
+                <div class="field field--textarea">
+                  <label for="f-idea">Project idea</label>
+                  <textarea id="f-idea" name="idea" rows="8"
+                    placeholder="Describe your idea in detail. What problem does it solve? Who is it for? What are the key features?"></textarea>
+                </div>
+
+                <div class="field">
+                  <label for="f-audience">Target audience</label>
+                  <input id="f-audience" name="audience" type="text"
+                    placeholder="e.g. busy engineers who take a lot of meeting notes" autocomplete="off" />
+                </div>
+              </div>
+
+              <div class="form-side-col">
+                <div class="field">
+                  <label for="f-stack">Preferred stack</label>
+                  <select id="f-stack" name="stack">
+                    <option value="typescript">TypeScript / JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="go">Go</option>
+                    <option value="rust">Rust</option>
+                    <option value="unsure">Not sure yet</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="f-github">GitHub username</label>
+                  <input id="f-github" name="github" type="text" placeholder="octocat" autocomplete="off" />
+                </div>
+
+                <div class="field">
+                  <label for="f-comfort">Comfort level</label>
+                  <select id="f-comfort" name="comfort">
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="f-type">Project type</label>
+                  <select id="f-type" name="type">
+                    <option value="tool">CLI / developer tool</option>
+                    <option value="web-app">Web app</option>
+                    <option value="service">API / service</option>
+                    <option value="data-pipeline">Data pipeline</option>
+                    <option value="unsure">Not sure yet</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="f-team">Team size</label>
+                  <select id="f-team" name="team">
+                    <option value="solo">Solo</option>
+                    <option value="pair">Pair</option>
+                    <option value="small-team">Small team (3–5)</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="f-deadline">Deadline</label>
+                  <input id="f-deadline" name="deadline" type="text" placeholder="e.g. 4 weeks" autocomplete="off" />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn--primary" id="run-btn">Run pipeline →</button>
+              <button type="button" class="btn btn--ghost" id="example-btn">Load example</button>
+              <span class="form-hint" id="form-hint"></span>
+            </div>
+            <p class="form-note">AbridgeAI will run the seven deterministic agents already in this build to analyze your
+              idea and prepare your build plan — nothing leaves your browser.</p>
+          </form>
+        </section>
+
+        <!-- ===== PROJECTS VIEW (history shell) ===== -->
+        <section class="view" id="view-projects" data-view-panel="projects" hidden>
+          <!-- Dom query safety: history-list is moved to the sidebar. -->
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
